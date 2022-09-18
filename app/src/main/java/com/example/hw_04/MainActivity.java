@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FirstFrag firstFrag =  (FirstFrag) getSupportFragmentManager()
                                 .findFragmentByTag("First Fragment");
         if(firstFrag != null) {
+            firstFrag.reset();
             firstFrag.updateWeightGender(user);
         }
         getSupportFragmentManager().popBackStack();
