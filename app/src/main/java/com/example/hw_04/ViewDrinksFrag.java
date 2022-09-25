@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.hw_04.databinding.FragmentViewDrinksBinding;
@@ -29,6 +31,8 @@ public class ViewDrinksFrag extends Fragment {
 
 
     public ArrayList<Drink> allDrinks = new ArrayList<>();
+    ListView drinksList;
+    DrinksAdapter adapter;
 
     FragmentViewDrinksBinding binding;
     int currentIndex = 0;
@@ -58,6 +62,10 @@ public class ViewDrinksFrag extends Fragment {
         if (getArguments() != null) {
             allDrinks = getArguments().getParcelableArrayList("allDrinks");
         }
+
+        drinksList = binding.drinksListView;
+        adapter = new DrinksAdapter(getContext(), R.layout.drink_row_item, allDrinks);
+        drinksList.setAdapter(adapter);
     }
 
     @Override
@@ -74,80 +82,12 @@ public class ViewDrinksFrag extends Fragment {
 
         setView(currentIndex);
 
-        binding.backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                currentIndex--;
-                Log.d("currentIndex", "" + currentIndex);
-                if(currentIndex < 0) {
-                    currentIndex = allDrinks.size()-1;
-                }
-                Log.d("currentIndex", "new Index after back" + currentIndex);
-
-                setView(currentIndex);
-            }
-        });
-
-        binding.nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("currentIndex", "" + currentIndex);
-                currentIndex++;
-                if(currentIndex > (allDrinks.size()-1)) {
-                    currentIndex = 0;
-                }
-                Log.d("currentIndex", "new Index after next" + currentIndex);
-
-                setView(currentIndex);
-            }
-        });
-
-        binding.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("currentIndex", "new Index before delete" + currentIndex);
-
-                allDrinks.remove(currentIndex);
-                currentIndex--;
-                Log.d("currentIndex", "new Index after delete" + currentIndex);
-
-                if(allDrinks.size() == 0) {
-                    viewDrinksFragInterface.closeButtonCLicked(allDrinks);
-                }
-                else {
-                    if (currentIndex < 0) {
-                        currentIndex = allDrinks.size();
-                    }
-                    if (currentIndex > allDrinks.size() - 1) {
-                        currentIndex = 0;
-                    }
-                    setView(currentIndex);
-                }
-            }
-        });
-
-        binding.closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewDrinksFragInterface.closeButtonCLicked(allDrinks);
-            }
-        });
-
-
 
     }
 
     public void setView(int currentIndex) {
 
-        binding.totalDrinks.setText("Drink " + (currentIndex+1) + " out of " + allDrinks.size());
 
-
-        binding.alcoholPercent.setText(allDrinks.get(currentIndex).percent + "% Alcohol");
-        binding.alcoholContent.setText(allDrinks.get(currentIndex).size + "Oz");
-
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-
-        binding.addedTime.setText("Added " + format.format(allDrinks.get(currentIndex).createDatetime));
     }
 
 
